@@ -12,23 +12,44 @@
 </head>
 
 <body>
-  <div id="app-root" class="relative flex h-auto min-h-screen w-full flex-col bg-slate-50 group/design-root overflow-x-hidden"
+  <div id="app-root"
+    class="relative flex h-auto min-h-screen w-full flex-col bg-slate-50 group/design-root overflow-x-hidden"
     style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'>
     <div class="layout-container flex h-full grow flex-col">
       <header
-        class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7ecf3] px-10 py-3">
+        class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 whitespace-nowrap border-b border-solid border-b-[#e7ecf3] px-4 sm:px-10 py-3">
         <div class="flex items-center gap-4 text-[#0d131b]">
           <div class="size-4">
             📱
           </div>
           <h2 class="text-[#0d131b] text-lg font-bold leading-tight tracking-[-0.015em]">Samsung S23+</h2>
         </div>
-        <div class="flex flex-1 justify-end gap-8">
-          <div class="flex items-center gap-9">
+        <div class="flex flex-1 items-center justify-end gap-4 flex-wrap sm:flex-nowrap">
+          <!-- hamburger visible on small screens -->
+          <button id="mobile-toggle"
+            class="inline-flex min-[901px]:hidden items-center justify-center p-2 mr-2 rounded-md bg-transparent"
+            aria-expanded="false" aria-label="Abrir menu">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+
+          <nav id="desktop-nav" class="hidden min-[901px]:flex flex-wrap items-center gap-3 sm:gap-9">
             <a class="text-[#0d131b] text-sm font-medium leading-normal" href="#">Home</a>
             <a class="text-[#0d131b] text-sm font-medium leading-normal" href="#galeria">Galeria</a>
             <a class="text-[#0d131b] text-sm font-medium leading-normal" href="https://igorlazzaretti.com"
               target="_blank" rel="noreferrer">Sou um desenvolvedor, me contrate</a>
+          </nav>
+          <!-- mobile menu (hidden by default) -->
+          <div id="mobile-menu"
+            class="hidden min-[901px]:hidden absolute left-4 right-4 top-full mt-2 bg-white dark:bg-slate-900 shadow-md rounded-md z-40 p-4">
+            <nav class="flex flex-col gap-3">
+              <a class="text-[#0d131b] text-sm font-medium leading-normal" href="#">Home</a>
+              <a class="text-[#0d131b] text-sm font-medium leading-normal" href="#galeria">Galeria</a>
+              <a class="text-[#0d131b] text-sm font-medium leading-normal" href="https://igorlazzaretti.com"
+                target="_blank" rel="noreferrer">Sou um desenvolvedor, me contrate</a>
+            </nav>
           </div>
           <button id="theme-toggle"
             class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#e7ecf3] text-[#0d131b] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
@@ -37,7 +58,7 @@
 
         </div>
       </header>
-      <div class="px-40 flex flex-1 justify-center py-5">
+      <div class="px-4 sm:px-40 flex flex-1 justify-center py-5">
         <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
           <div class="@container">
             <div class="@[480px]:p-4">
@@ -71,10 +92,8 @@
             id="galeria">
             Galeria de Fotos
           </h2>
-
-          <div id="grade-fotos" class="grid grid-cols-[repeat(auto-fit,minmax(283px,1fr))] gap-3 p-4">
+          <div id="grade-fotos" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
           </div>
-
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3483.5151672602856!2d-51.19978971181374!3d-29.17895622816704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x951ea33b86f406bf%3A0x528a549a8ed13126!2sAv.%20Rio%20Branco%2C%201530%20-%20Rio%20Branco%2C%20Caxias%20do%20Sul%20-%20RS%2C%2095096-000!5e0!3m2!1spt-BR!2sbr!4v1764101211495!5m2!1spt-BR!2sbr"
             width="1000" height="550" style="border:0;" allowfullscreen="" loading="lazy"
@@ -95,10 +114,13 @@
   </div>
   <script src="script.js"></script>
   <!-- Modal overlay used to display clicked photo fullscreen -->
-  <div id="modal-overlay" class="hidden fixed inset-0 items-center justify-center bg-black/70 z-50 p-5" aria-hidden="true">
+  <div id="modal-overlay" class="hidden fixed inset-0 items-center justify-center bg-black/70 z-50 p-5"
+    aria-hidden="true">
     <div id="modal-content" class="max-w-[1200px] w-full max-h-[96vh] relative flex items-center justify-center">
       <img id="modal-img" class="max-w-full max-h-[96vh] object-contain rounded-md" src="" alt="Foto em tela cheia" />
-      <button id="modal-close" class="absolute -top-3 -right-3 bg-slate-900 text-white rounded-full w-9 h-9 flex items-center justify-center cursor-pointer" aria-label="Fechar">✕</button>
+      <button id="modal-close"
+        class="absolute -top-3 -right-3 bg-slate-900 text-white rounded-full w-9 h-9 flex items-center justify-center cursor-pointer"
+        aria-label="Fechar">✕</button>
     </div>
   </div>
 </body>

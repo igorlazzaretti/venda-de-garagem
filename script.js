@@ -23,12 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Usamos o .map para transformar a lista de nomes em lista de HTML
   // E o .join('') para juntar tudo em um texto só
   const htmlFotos = listaDeFotos.map(foto => `
-    <div class="flex flex-col gap-3 max-w-[560px]">
-      <div class="photo-item w-full bg-center bg-no-repeat aspect-[3/5] bg-cover rounded-lg cursor-pointer transition-transform duration-150 ease-in-out transform hover:-translate-y-1 hover:scale-105 hover:shadow-xl"
-          role="button" tabindex="0" data-foto="${foto}"
-          style="background-image: url('./assets/${foto}');">
-      </div>
-    </div>
+
+
+<div
+  class="photo-item bg-center bg-cover bg-no-repeat aspect-[9/16]
+         rounded-lg overflow-hidden
+         cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-xl"
+             data-foto="${foto}"
+  style="background-image: url('./assets/${foto}');">
+</div>
+
+
+
   `).join('');
 
   // 4. Insere o HTML gerado dentro do container
@@ -141,6 +147,47 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggle.addEventListener('click', () => {
       const isDark = appRoot.classList.contains('bg-slate-900');
       setTheme(!isDark);
+    });
+  }
+
+  // --- Mobile menu toggle ---
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  function openMobileMenu() {
+    if (!mobileMenu || !mobileToggle) return;
+    mobileMenu.classList.remove('hidden');
+    mobileToggle.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMobileMenu() {
+    if (!mobileMenu || !mobileToggle) return;
+    mobileMenu.classList.add('hidden');
+    mobileToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  if (mobileToggle && mobileMenu) {
+    mobileToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (mobileMenu.classList.contains('hidden')) openMobileMenu();
+      else closeMobileMenu();
+    });
+
+    // close when clicking a link inside mobile menu
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => closeMobileMenu());
+    });
+
+    // close on outside click
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.classList.contains('hidden') && !mobileMenu.contains(e.target) && e.target !== mobileToggle) {
+        closeMobileMenu();
+      }
+    });
+
+    // close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileMenu && !mobileMenu.classList.contains('hidden')) closeMobileMenu();
     });
   }
 });
