@@ -73,6 +73,74 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === modalOverlay) closeModal();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('show')) closeModal();
+    if (e.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('flex')) closeModal();
   });
+
+  // --- Theme toggle (dark/light) ---
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeEmoji = document.getElementById('theme-emoji');
+  const appRoot = document.getElementById('app-root');
+
+  // mapping of class replacements when switching theme
+  const replacements = [
+    { from: 'text-[#0d131b]', to: 'text-slate-50' },
+    { from: 'text-[#4c6c9a]', to: 'text-slate-300' },
+    { from: 'bg-slate-50', to: 'bg-slate-900' },
+    { from: 'bg-[#e7ecf3]', to: 'bg-slate-700' }
+  ];
+
+  function replaceClasses(apply) {
+    // apply: true => replace from->to, false => revert to->from
+    const list = apply ? replacements : replacements.slice().reverse();
+    list.forEach(pair => {
+      const from = apply ? pair.from : pair.to;
+      const to = apply ? pair.to : pair.from;
+      // iterate all elements with class attribute
+      document.querySelectorAll('[class]').forEach(el => {
+        if (el.classList.contains(from)) {
+          try {
+            el.classList.replace(from, to);
+          } catch (err) {
+            el.classList.remove(from);
+            el.classList.add(to);
+          }
+        }
+      });
+    });
+  }
+
+  function setTheme(dark) {
+    if (!appRoot) return;
+    if (dark) {
+      appRoot.classList.remove('bg-slate-50');
+      appRoot.classList.add('bg-slate-900', 'text-slate-50');
+      replaceClasses(true);
+      if (themeEmoji) {
+        themeEmoji.textContent = '☀️';
+        themeEmoji.classList.add('rotate-180', 'transition-transform');
+      }
+      localStorage.setItem('site-theme', 'dark');
+    } else {
+      appRoot.classList.remove('bg-slate-900', 'text-slate-50');
+      appRoot.classList.add('bg-slate-50');
+      replaceClasses(false);
+      if (themeEmoji) {
+        themeEmoji.textContent = '🌙';
+        themeEmoji.classList.remove('rotate-180');
+      }
+      localStorage.setItem('site-theme', 'light');
+    }
+  }
+
+  // Initialize from stored preference (or system preference)
+  const stored = localStorage.getItem('site-theme');
+  if (stored === 'dark') setTheme(true);
+  else if (stored === 'light') setTheme(false);
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const isDark = appRoot.classList.contains('bg-slate-900');
+      setTheme(!isDark);
+    });
+  }
 });
